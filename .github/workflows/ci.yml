@@ -1,0 +1,39 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.os }} / ${{ matrix.cc }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, cc: gcc }
+          - { os: ubuntu-latest, cc: clang }
+          - { os: macos-latest, cc: clang }
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build
+        run: make CC=${{ matrix.cc }}
+      - name: Test
+        run: make CC=${{ matrix.cc }} test
+
+  sanitizers:
+    name: address + undefined
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Build
+        run: >
+          make CC=clang
+          OPT="-O1 -g -fsanitize=address,undefined -fno-omit-frame-pointer"
+          LDFLAGS="-fsanitize=address,undefined"
+      - name: Test
+        env:
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: make test
