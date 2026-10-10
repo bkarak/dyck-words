@@ -119,7 +119,7 @@ to 4, three words in four come from a shift. Counted with an instrumented copy o
 n = 18: 347,993,910 shifts and 129,644,789 pushes, and 1.37 bracket moves per word on average,
 counting the ones sent home.
 
-## Kostas Manes's ranking
+## Ranking
 
 The rank of a word is its place in the list, from 1. Kostas Manes worked out how to compute it
 without walking the list, in a note called *RANKING*, begun on 25 July 2004, and a C++
